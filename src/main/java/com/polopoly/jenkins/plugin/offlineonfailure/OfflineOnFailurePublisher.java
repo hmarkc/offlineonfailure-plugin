@@ -38,9 +38,13 @@ public class OfflineOnFailurePublisher
             Node buildNode = build.getBuiltOn();
             PrintStream log = listener.getLogger();
 
+            Cause.UserIdCause idCause = build.getCause(Cause.UserIdCause.class);
+            String id = idCause != null ? idCause.getUserId() : "anonymous";
             // Never set master offline
             if (Hudson.getInstance() != buildNode) {
-                buildNode.toComputer().setTemporarilyOffline(true, OfflineCause.create(Messages._OfflineOnFailureCause_Description()));
+                buildNode.toComputer().setTemporarilyOffline(true, new OfflineCause.UserCause( null,
+                        "(" + id + ") " +
+                                Messages._OfflineOnFailureCause_Description()));
                 log.println(Messages.OfflineOnFailure_FailureDetected());
             } else {
                 log.println(Messages.OfflineOnFailure_FailureDetectedOnMaster());
