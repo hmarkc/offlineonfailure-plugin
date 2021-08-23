@@ -42,9 +42,10 @@ public class OfflineOnFailurePublisher
             String id = idCause != null ? idCause.getUserId() : "anonymous";
             // Never set master offline
             if (Hudson.getInstance() != buildNode) {
-                buildNode.toComputer().setTemporarilyOffline(true, new OfflineCause.UserCause( null,
+                buildNode.toComputer().setTemporarilyOffline(true, new OfflineCause.UserCause(
+                        User.current(),
                         "(" + id + ") " +
-                                Messages._OfflineOnFailureCause_Description()));
+                                "This node was taken offline due to previous job ending in FAILURE"));
                 log.println(Messages.OfflineOnFailure_FailureDetected());
             } else {
                 log.println(Messages.OfflineOnFailure_FailureDetectedOnMaster());
